@@ -1,4 +1,5 @@
 import extract
+import transform
 import config
 import data_quality_test
 import mysql.connector
@@ -7,9 +8,11 @@ import pandas as pd
 
 
 # Importing the songs_df from the extract.py and run data quality tests on data retrieved:
-df = extract.song_df
-if(data_quality_test.tests(df) == False):
+df_extract = extract.song_df
+if(data_quality_test.tests(df_extract) == False):
     raise ("Failed at Data Validation")
+
+df_transform = transform.transformed_df
 
 # Making connection to MySQL with defined connection credentials
 database_connection = sqlalchemy.create_engine('mysql+mysqlconnector://{0}:{1}@{2}/{3}?auth_plugin=mysql_native_password'.
@@ -21,6 +24,11 @@ database_connection = sqlalchemy.create_engine('mysql+mysqlconnector://{0}:{1}@{
 
 # Writing to MySQL db
 try:
-    df.to_sql(con=database_connection, name='spotify_top_50', if_exists='append')
+    df_extract.to_sql(con=database_connection, name='raw_spotify_top_50', if_exists='append')
+except:
+    print("Data already exists in the database")
+
+try:
+    df_transform.to_sql(con=database_connection, name='daily_top_artists', if_exists='append')
 except:
     print("Data already exists in the database")

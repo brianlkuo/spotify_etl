@@ -59,6 +59,7 @@ col = ['track_id',
        'track_name', 
        'track_added_at', 
        'track_popularity', 
+       'artist_id',
        'artist_name',
        'album_name',
     #    'album_label',
@@ -67,7 +68,7 @@ col = ['track_id',
 
 song_df = pd.DataFrame(song_dic, columns = col)
     
-# print(song_df.head())
+# print(song_df.head()) 
 
     
 
